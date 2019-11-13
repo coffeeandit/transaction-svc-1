@@ -1,0 +1,42 @@
+server:
+  port: 8083
+
+amazon:
+  aws:
+    accesskey: AKIAQW7646XIKRBXKJ53
+    secretkey: 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
+
+
+
+
+spring:
+  application:
+    name: transaction-svc
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      client-id: transaction-svc-consumer
+      group-id: transaction-svc
+      key-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit:  true
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1.0
+    enabled: true
+
+app:
+  topic: transaction
+  returnTopic: transaction_extorno
+
+
+alert:
+  url: "aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVENLTVQ0N1UxL0JRR1JTR1IzMi82Q3B4OFlZYmJqdktLcWxwQ1kzRFlxTkc="
+  imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3SQ6d6N4lPB7rv_BysMJ5q_vGYCHVCY0fgR1y98p4fWlrA_5Rmw"
+
+realtime-stream:
+  message: Notificação de transação financeira.
+  author: Deutsche Bank S.A
