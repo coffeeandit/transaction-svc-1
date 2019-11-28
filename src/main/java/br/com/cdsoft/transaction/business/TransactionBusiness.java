@@ -8,7 +8,6 @@ import br.com.cdsoft.transaction.transaction.dto.TipoTransacao;
 import br.com.cdsoft.transaction.transaction.dto.TransactionDTO;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.sleuth.annotation.NewSpan;
 import org.springframework.cloud.sleuth.annotation.SpanTag;
@@ -86,15 +85,23 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
 
     }
 
+    public Optional<Item> retrieveItem(final String uui) {
+        var table = getTable();
+        return Optional.ofNullable(table.getItem(UUI, uui));
+
+    }
+
+
+
     @NewSpan
-    public DeleteItemOutcome removeItem(@SpanTag(key = "removeTransaction") final TransactionDTO transaction) {
+    public Optional<DeleteItemOutcome> removeItem(@SpanTag(key = "removeTransaction") final TransactionDTO transactionDTO) {
         var table = getTable();
 
 
         DeleteItemSpec deleteItemSpec = new DeleteItemSpec()
-                .withPrimaryKey(new PrimaryKey(UUI, transaction.getUui().toString()));
+                .withPrimaryKey(new PrimaryKey(UUI, transactionDTO.getUui().toString()));
 
-        return table.deleteItem(deleteItemSpec);
+        return Optional.of(table.deleteItem(deleteItemSpec));
 
 
     }
