@@ -17,6 +17,7 @@ import org.springframework.cloud.sleuth.annotation.NewSpan;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -32,10 +33,14 @@ public class SlackAlertService {
     private String url;
     @Value("${alert.imagem}")
     private String imagem;
+    @Value("${alert.imagem2}")
+    private String imagem2;
     @Value("${realtime-stream.message}")
     private String message;
     @Value("${realtime-stream.author}")
     private String author;
+    @Value("${transaction.riskValue}")
+    BigDecimal riskValue;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SlackAlertService.class);
@@ -85,6 +90,14 @@ public class SlackAlertService {
         messageDTO.setAuthor(author);
         messageDTO.setTitle("Notificação de Transação.");
         messageDTO.setAuthorIcon(imagem);
+        messageDTO.setImageUrl(imagem);
+
+        if (transactionDTO.getValor().compareTo(riskValue) > 0) {
+            messageDTO.setAuthorIcon(imagem2);
+            messageDTO.setImageUrl(imagem2);
+
+
+        }
         messageDTO.addField("Detalhes:", String.format(message, transactionDTO.getTipoTransacao().toString(),
                 transactionDTO.getValor().toPlainString(),
                 transactionDTO.getConta().getCodigoConta().longValue(),
@@ -93,7 +106,6 @@ public class SlackAlertService {
                 transactionDTO.getBeneficiario().getCPF().longValue(),
                 transactionDTO.getBeneficiario().getConta(), transactionDTO.getBeneficiario().getAgencia(),
                 transactionDTO.getBeneficiario().getCodigoBanco()));
-        messageDTO.setImageUrl(imagem);
         attachments.add(messageDTO);
         templateSlack.setAttachments(attachments);
 

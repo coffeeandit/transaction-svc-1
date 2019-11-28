@@ -74,6 +74,8 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
     @Override
     @NewSpan
     public Item putItem(@SpanTag(key = "transaction") final TransactionDTO transaction) {
+
+        log.info(String.format("Inserindo a transação %s", transaction));
         var table = getTable();
         var conta = transaction.getConta();
         var beneficiario = transaction.getBeneficiario();

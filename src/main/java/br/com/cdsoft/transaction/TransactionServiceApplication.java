@@ -5,6 +5,8 @@ import br.com.cdsoft.transaction.observer.TransactionObserverService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +50,11 @@ public class TransactionServiceApplication {
         var transactionObserverService = new TransactionObserverService();
         transactionObserverService.addObserver(slackTransactionObserver);
         return transactionObserverService;
+    }
+
+    @Bean
+    public NewTopic topic1() {
+        return new NewTopic("transaction", 1, (short) 1);
     }
 
 }

@@ -4,6 +4,7 @@ package br.com.cdsoft.transaction.transaction.kafka;
 import br.com.cdsoft.transaction.business.TransactionBusiness;
 import br.com.cdsoft.transaction.observer.TransactionObserverService;
 import br.com.cdsoft.transaction.transaction.dto.TransactionDTO;
+import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -59,8 +61,11 @@ public class TransactionMessageReader {
     public void onConsumeExtorno(final String message) {
         try {
             TransactionDTO transaction = getTransaction(message);
-            transactionBusiness.removeItem(transaction);
-            log.info("Transação removida.: " + transaction);
+            Optional<DeleteItemOutcome> deleteItemOutcome = transactionBusiness.removeItem(transaction);
+            deleteItemOutcome.ifPresent(deleteItemOutcome1 -> {
+                log.info(String.format("Transação removida %s", deleteItemOutcome1.getItem()));
+
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
