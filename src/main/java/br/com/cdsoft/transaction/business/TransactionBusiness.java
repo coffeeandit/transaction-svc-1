@@ -92,7 +92,6 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
     }
 
 
-
     @NewSpan
     public Optional<DeleteItemOutcome> removeItem(@SpanTag(key = "removeTransaction") final TransactionDTO transactionDTO) {
         var table = getTable();
@@ -106,26 +105,45 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
 
     }
 
-    public ItemCollection<ScanOutcome> queryTransaction(final Long agencia, final Long conta) {
+    public List<TransactionDTO> queryTransaction(final Long agencia, final Long conta) {
 
 
         var now = LocalDateTime.now();
         var lastWeek = now.plus(AMOUNT_TO_ADD, ChronoUnit.WEEKS);
-
-        var expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":".concat(AGENCIA), agencia);
-        expressionAttributeValues.put(":".concat(CONTA), conta);
-        expressionAttributeValues.put(":dataInicial", lastWeek.toString());
-        expressionAttributeValues.put(":dataFinal", now.toString());
-
-
-        return getTable().scan(TRANSACOES_SEMANA,
-                null,
-                expressionAttributeValues);
+        return queryTransaction(agencia, conta, lastWeek, now);
 
     }
 
-    public List<TransactionDTO> mapToTransactionDTO(final ItemCollection<ScanOutcome> scanOutcome) {
+    public List<TransactionDTO> queryTransactionFewSeconds(final Long agencia, final Long conta) {
+
+
+        var now = LocalDateTime.now();
+        var lastWeek = now.plus(-10, ChronoUnit.SECONDS);
+        return queryTransaction(agencia, conta, lastWeek, now);
+
+    }
+
+    public List<TransactionDTO> queryTransaction(final Long agencia, final Long conta,
+                                                 final LocalDateTime start, final LocalDateTime end
+    ) {
+
+
+        var now = LocalDateTime.now();
+        var lastWeek = now.plus(AMOUNT_TO_ADD, ChronoUnit.WEEKS);
+        var expressionAttributeValues = new HashMap<String, Object>();
+        expressionAttributeValues.put(":".concat(AGENCIA), agencia);
+        expressionAttributeValues.put(":".concat(CONTA), conta);
+        expressionAttributeValues.put(":dataInicial", start.toString());
+        expressionAttributeValues.put(":dataFinal", end.toString());
+
+
+        return mapToTransactionDTO(getTable().scan(TRANSACOES_SEMANA,
+                null,
+                expressionAttributeValues));
+
+    }
+
+    protected List<TransactionDTO> mapToTransactionDTO(final ItemCollection<ScanOutcome> scanOutcome) {
 
         var transactions = new ArrayList<TransactionDTO>();
 

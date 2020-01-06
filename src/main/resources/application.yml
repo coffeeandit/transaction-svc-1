@@ -19,7 +19,7 @@ spring:
   application:
     name: transaction-svc
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ec2-54-212-34-230.us-west-2.compute.amazonaws.com:9092
     consumer:
       client-id: transaction-svc-consumer
       group-id: transaction-svc
@@ -37,6 +37,8 @@ spring:
 app:
   topic: transaction
   returnTopic: transaction_extorno
+  timeout: 5
+  cacheTime: 15
 
 
 alert:

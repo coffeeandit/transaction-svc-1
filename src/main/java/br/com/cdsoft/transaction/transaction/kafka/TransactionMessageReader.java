@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.annotation.ContinueSpan;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Objects;
