@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:13
 
 ADD build/libs/transaction-svc-0.0.1-SNAPSHOT.jar /tmp
 

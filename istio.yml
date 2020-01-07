@@ -40,6 +40,6 @@ spec:
       containers:
         - name: transaction-svc
           image: docker.io/csilveir/transaction:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8083
