@@ -28,7 +28,7 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit:  true
   zipkin:
-    base-url: http://localhost:9411
+    base-url: http://ec2-34-215-39-146.us-west-2.compute.amazonaws.com:80
   sleuth:
     sampler:
       probability: 1.0
@@ -39,6 +39,7 @@ app:
   returnTopic: transaction_extorno
   timeout: 5
   cacheTime: 15
+  intervalTransaction: 6
 
 
 alert:
