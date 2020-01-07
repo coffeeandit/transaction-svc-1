@@ -24,6 +24,8 @@ public class TransactionController {
     @Value("${app.cacheTime}")
     public int cacheTime;
     private TransactionBusiness transactionBusiness;
+    @Value("${app.intervalTransaction}")
+    private int intervalTransaction;
 
     public TransactionController(final TransactionBusiness transactionBusiness) {
         this.transactionBusiness = transactionBusiness;
@@ -34,7 +36,7 @@ public class TransactionController {
             @RequestParam("conta") final Long conta, @RequestParam("agencia") final Long agencia
     ) {
 
-        return Flux.interval(Duration.ofSeconds(6))
+        return Flux.interval(Duration.ofSeconds(intervalTransaction))
                 .map(sequence -> ServerSentEvent.<List<TransactionDTO>>builder()
                         .id(String.valueOf(sequence))
                         .event(SICREDI_TRANSACTION_EVENT)
