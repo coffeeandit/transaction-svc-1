@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-svc
+  labels:
+    app: transaction-svc
+    service: transaction-svc
+spec:
+  ports:
+    - port: 8083
+      name: http
+  selector:
+    app: transaction-svc
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sa-transaction-svc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-svc-v1
+  labels:
+    app: transaction-svc
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transaction-svc
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: transaction-svc
+        version: v1
+    spec:
+      serviceAccountName: sa-transaction-svc
+      containers:
+        - name: transaction-svc
+          image: docker.io/csilveir/transaction:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
