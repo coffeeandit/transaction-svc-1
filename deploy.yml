@@ -1,0 +1,11 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "transaction-svc-deploy"
+spec:
+  source:
+    git:
+      uri: "https://github.com/csilveir/transaction-svc"
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile_Deploy

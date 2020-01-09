@@ -1,0 +1,15 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "transaction-svc-build"
+spec:
+  source:
+    git:
+      uri: "https://github.com/csilveir/transaction-svc"
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: "DockerImage"
+      name: "172.30.1.1:5000/workshop/transaction-svc:VERSION_APP"

@@ -1,0 +1,9 @@
+FROM csilveir/istio-build:0.0.1
+
+RUN mkdir /tmp/transaction-svc
+ADD . /tmp/transaction-svc
+WORKDIR /tmp/transaction-svc
+RUN sed -i "s/VERSION_APP/$(cat gradle.properties | grep "$version" | cut -d'=' -f2)/g" istio.yml
+RUN istioctl kube-inject -f /tmp/transaction-svc/istio.yml -n workshop --kubeconfig=/tmp/transaction-svc/.kube/config | kubectl apply -f - -n workshop --kubeconfig=/tmp/transaction-svc/.kube/config
+RUN rm -rf /tmp/transaction-svc/
+

@@ -7,7 +7,7 @@ metadata:
     service: transaction-svc
 spec:
   ports:
-    - port: 8083
+    - port: 8082
       name: http
   selector:
     app: transaction-svc
@@ -20,12 +20,22 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transaction-svc-v1
+  name: transaction-svc
   labels:
     app: transaction-svc
     version: v1
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 120
+      maxSurge: "20%"
+      maxUnavailable: "10%"
+      pre: {}
+      post: {}
   selector:
     matchLabels:
       app: transaction-svc
@@ -39,7 +49,18 @@ spec:
       serviceAccountName: sa-transaction-svc
       containers:
         - name: transaction-svc
-          image: docker.io/csilveir/transaction:latest
+          image: 172.30.1.1:5000/workshop/transaction-svc:VERSION_APP
           imagePullPolicy: Always
           ports:
-            - containerPort: 8083
+            - containerPort: 8082
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - transaction-svc
+        from:
+          kind: Image
+          name: 172.30.1.1:5000/workshop/transaction-svc:VERSION_APP
+          namespace: workshop
+      type: ImageChange
+    - type: ConfigChange
