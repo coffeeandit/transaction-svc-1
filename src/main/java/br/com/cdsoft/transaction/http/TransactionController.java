@@ -46,5 +46,14 @@ public class TransactionController {
 
     }
 
+    @GetMapping(value = "/transaction/block", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Flux<TransactionDTO> queryTransactionBlock(
+            @RequestParam("conta") final Long conta, @RequestParam("agencia") final Long agencia
+    ) {
+        return Flux.fromIterable(transactionBusiness.queryTransaction(agencia, conta))
+                .limitRate(100).cache(Duration.ofMinutes(5));
+
+
+    }
 
 }

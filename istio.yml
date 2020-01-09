@@ -49,7 +49,7 @@ spec:
       serviceAccountName: sa-transaction-svc
       containers:
         - name: transaction-svc
-          image: 172.30.1.1:5000/workshop/transaction-svc:0.0.1-SNAPSHOT
+          image: 172.30.1.1:5000/workshop/transaction-svc:VERSION_APP
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -60,7 +60,7 @@ spec:
           - transaction-svc
         from:
           kind: Image
-          name: 172.30.1.1:5000/workshop/transaction-svc:0.0.1-SNAPSHOT
+          name: 172.30.1.1:5000/workshop/transaction-svc:VERSION_APP
           namespace: workshop
       type: ImageChange
     - type: ConfigChange
