@@ -64,3 +64,51 @@ spec:
           namespace: workshop
       type: ImageChange
     - type: ConfigChange
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-svc-v2
+  labels:
+    app: transaction-svc
+    version: v2
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 120
+      maxSurge: "20%"
+      maxUnavailable: "10%"
+      pre: {}
+      post: {}
+  selector:
+    matchLabels:
+      app: transaction-svc
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: transaction-svc
+        version: v1
+    spec:
+      serviceAccountName: sa-transaction-svc
+      containers:
+        - name: transaction-svc
+          image: 172.30.1.1:5000/workshop/transaction-svc:0.0.2-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - transaction-svc
+        from:
+          kind: Image
+          name: 172.30.1.1:5000/workshop/transaction-svc:0.0.2-SNAPSHOT
+          namespace: workshop
+      type: ImageChange
+    - type: ConfigChange
