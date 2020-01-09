@@ -87,7 +87,7 @@ spec:
   selector:
     matchLabels:
       app: transaction-svc
-      version: v2
+      version: v1
   template:
     metadata:
       labels:
