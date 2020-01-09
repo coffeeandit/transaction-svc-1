@@ -1,18 +1,19 @@
 package br.com.cdsoft.transaction.http;
 
 import br.com.cdsoft.transaction.business.TransactionBusiness;
+import br.com.cdsoft.transaction.config.NotFoundResponse;
 import br.com.cdsoft.transaction.transaction.dto.TransactionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -62,11 +63,11 @@ public class TransactionController {
     }
 
     @GetMapping(value = "/transaction/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TransactionDTO> findById(@PathVariable("id") String uuid, @RequestHeader(name = "content-type", defaultValue = MediaType.APPLICATION_JSON_VALUE) String contentType) {
+    public Mono<TransactionDTO> findById(@PathVariable("id") String uuid, @RequestHeader(name = "content-type", defaultValue = MediaType.APPLICATION_JSON_VALUE) String contentType) {
         var item = transactionBusiness.retrieveItem(uuid);
         if (item.isPresent()) {
-            return ResponseEntity.ok(item.get());
+            return Mono.just(item.get());
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundResponse("Transação não encontrada");
     }
 }
