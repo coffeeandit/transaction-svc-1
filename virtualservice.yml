@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: helloworld
+  name: transaction-svc
 spec:
   hosts:
     - transaction-svc
@@ -12,7 +12,7 @@ spec:
             subset: v1
           weight: 50
         - destination:
-            host: transaction-svc
+            host: transaction-svc-v2
             subset: v2
           weight: 50
 ---
