@@ -5,14 +5,14 @@ import br.com.cdsoft.transaction.transaction.dto.TransactionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -61,5 +61,12 @@ public class TransactionController {
         return "6";
     }
 
-
+    @GetMapping(value = "/transaction/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TransactionDTO> findById(@PathVariable("id") String uuid, @RequestHeader(name = "content-type", defaultValue = MediaType.APPLICATION_JSON_VALUE) String contentType) {
+        var item = transactionBusiness.retrieveItem(uuid);
+        if (item.isPresent()) {
+            return ResponseEntity.ok(item.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

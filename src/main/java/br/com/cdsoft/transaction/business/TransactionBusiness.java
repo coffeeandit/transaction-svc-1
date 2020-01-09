@@ -85,9 +85,13 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
 
     }
 
-    public Optional<Item> retrieveItem(final String uui) {
-        var table = getTable();
-        return Optional.ofNullable(table.getItem(UUI, uui));
+    public Optional<TransactionDTO> retrieveItem(final String uui) {
+        var item = getTable().getItem(new PrimaryKey(UUI, uui));
+        if (Objects.nonNull(item)) {
+            return Optional.ofNullable(itemTransactionDTOFunction.apply(item));
+        }
+
+        return Optional.empty();
 
     }
 
@@ -122,6 +126,7 @@ public class TransactionBusiness implements DynamoTable, InsertableItem<Transact
         return queryTransaction(agencia, conta, lastWeek, now);
 
     }
+
 
     public List<TransactionDTO> queryTransaction(final Long agencia, final Long conta,
                                                  final LocalDateTime start, final LocalDateTime end
