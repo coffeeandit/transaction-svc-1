@@ -56,10 +56,10 @@ public class TransactionController {
 
     }
 
-//    @GetMapping(value = "/transaction/version", produces = MediaType.TEXT_HTML_VALUE)
-//    public String getVersion() {
-//        return "6";
-//    }
+    @GetMapping(value = "/transaction/version", produces = MediaType.TEXT_HTML_VALUE)
+    public String getVersion() {
+        return "6";
+    }
 
     @GetMapping(value = "/transaction/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<TransactionDTO> findById(@PathVariable("id") String uuid, @RequestHeader(name = "content-type", defaultValue = MediaType.APPLICATION_JSON_VALUE) String contentType) {
