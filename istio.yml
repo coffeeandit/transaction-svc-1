@@ -98,7 +98,7 @@ spec:
       containers:
         - name: transaction-svc
           image: 172.30.1.1:5000/workshop/transaction-svc:0.0.4-SNAPSHOT
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8083
   triggers:

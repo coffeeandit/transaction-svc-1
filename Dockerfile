@@ -1,4 +1,4 @@
-FROM openjdk:13
+FROM openjdk:13-slim
 RUN mkdir /tmp/transaction-svc
 ADD . /tmp/transaction-svc
 RUN chmod +x /tmp/transaction-svc/gradlew
